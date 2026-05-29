@@ -635,75 +635,509 @@ export default function App() {
 
 // ================= ARCHITECTURAL ARCHIVE LUXURY STYLES =================
 const styles = {
-  appContainer: { display: 'flex', minHeight: '100vh', backgroundColor: '#070708', color: '#FFFFFF', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', letterSpacing: '-0.01em' },
-  sidebar: { width: '250px', height: '100vh', position: 'fixed', top: 0, left: 0, borderRight: '1px solid #141416', padding: '40px 30px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxSizing: 'border-box', backgroundColor: '#070708', zIndex: 10 },
-  logo: { fontSize: '16px', fontWeight: '900', letterSpacing: '4px', marginBottom: '50px', paddingLeft: '10px', cursor: 'pointer', color: '#FFF' },
-  navLinks: { display: 'flex', flexDirection: 'column', gap: '8px' },
-  navText: { fontSize: '13px', fontWeight: '500', letterSpacing: '0.5px' },
-  navItem: { display: 'flex', alignItems: 'center', gap: '18px', padding: '14px 12px', borderRadius: '12px', cursor: 'pointer', transition: 'all 0.2s ease' },
-  profileLink: { display: 'flex', alignItems: 'center', gap: '14px', padding: '12px', border: '1px solid #141416', borderRadius: '16px', marginTop: 'auto', cursor: 'pointer', backgroundColor: '#0D0D0F' },
-  miniAvatar: { width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#1A1A1E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: 'bold', color: '#A0A0A0' },
-  miniAvatarImg: { width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover' },
-
-  mainContent: { marginLeft: '250px', flex: 1, display: 'flex', justifyContent: 'center', paddingTop: '50px', minWidth: '0', paddingBottom: '80px' },
-  mainContentPanels: { marginLeft: '250px', flex: 1, display: 'flex', justifyContent: 'center', paddingTop: '60px', minWidth: '0', paddingBottom: '80px' },
-  feedContainer: { width: '100%', maxWidth: '580px', padding: '0 20px' },
-  loaderSpinnerBox: { fontSize: '10px', letterSpacing: '3px', color: '#808080', textAlign: 'center', marginTop: '140px', fontWeight: '700' },
-  postCard: { border: '1px solid #141416', backgroundColor: '#0D0D0F', borderRadius: '24px', marginBottom: '35px', paddingBottom: '16px', overflow: 'hidden' },
-  postHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 20px' },
-  headerLeft: { display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' },
-  brandAvatar: { width: '38px', height: '38px', borderRadius: '50%', backgroundColor: '#1A1A1E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#FFF', border: '1px solid #242428' },
-  usernameRow: { display: 'flex', alignItems: 'center', gap: '6px' },
-  username: { fontSize: '13px', fontWeight: '600', color: '#FFF', letterSpacing: '-0.1px' },
-  badgeVerify: { width: '14px', height: '14px', borderRadius: '50%', backgroundColor: '#FFF', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-  location: { fontSize: '11px', color: '#6A6A70', display: 'block', marginTop: '2px' },
-  mediaContainer: { display: 'flex', backgroundColor: '#000', margin: '0 12px', borderRadius: '16px', overflow: 'hidden' },
-  postImage: { width: '100%', height: 'auto', aspectRatio: '4/5', objectFit: 'cover', display: 'block' },
-
-  actionRow: { display: 'flex', padding: '16px 20px 8px 20px', gap: '20px' },
-  iconActionBtn: { background: 'none', border: 'none', padding: 0, cursor: 'pointer', opacity: 0.85 },
-  likesSection: { padding: '0 20px', fontSize: '12px', fontWeight: '700', marginBottom: '8px', color: '#FFF', letterSpacing: '0.2px', textTransform: 'uppercase' },
-  captionSection: { padding: '0 20px', fontSize: '13.5px', lineHeight: '1.5', marginBottom: '12px', color: '#A0A0A0' },
-  boldUser: { fontWeight: '700', marginRight: '8.5px', cursor: 'pointer', color: '#FFF' },
-  captionText: { color: '#D4D4D8' },
-
-  commentsBoxHarness: { margin: '12px 20px 4px 20px', borderTop: '1px solid #141416', paddingTop: '14px' },
-  commentsListingArea: { display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '140px', overflowY: 'auto', marginBottom: '14px' },
-  singleCommentRow: { fontSize: '12.5px', lineHeight: '1.4' },
-  commentInputRow: { display: 'flex', gap: '12px', border: '1px solid #141416', borderRadius: '14px', padding: '8px 14px', backgroundColor: '#070708', alignItems: 'center' },
-  inlineCommentInput: { flex: 1, background: 'none', border: 'none', color: '#FFF', fontSize: '13px', outline: 'none' },
-  postCommentBtn: { background: 'none', border: 'none', color: '#FFF', fontSize: '11px', fontWeight: '800', cursor: 'pointer', letterSpacing: '1px' },
-
-  searchBarInput: { width: '100%', backgroundColor: '#0D0D0F', border: '1px solid #141416', borderRadius: '16px', padding: '16px 20px', color: '#FFF', fontSize: '14px', outline: 'none', marginBottom: '30px' },
-  searchResultsContainer: { display: 'flex', flexDirection: 'column', gap: '10px' },
-  searchResultRowItem: { display: 'flex', alignItems: 'center', gap: '16px', backgroundColor: '#0D0D0F', padding: '14px 20px', borderRadius: '16px', border: '1px solid #141416', cursor: 'pointer' },
-  searchMiniAvatar: { width: '38px', height: '38px', borderRadius: '50%', backgroundColor: '#1A1A1E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', color: '#707070' },
-  searchResultUsername: { fontSize: '13px', fontWeight: '600', color: '#FFF' },
-  searchResultCaptionSnippet: { fontSize: '12px', color: '#707070', marginTop: '3px' },
-
-  panelCenterContainer: { width: '100%', maxWidth: '480px', padding: '0 20px', display: 'flex', flexDirection: 'column' },
-  panelTitleHeader: { fontSize: '14px', fontWeight: '900', letterSpacing: '3px', marginBottom: '35px', color: '#FFF', textAlign: 'center' },
-  nativeHiddenFileInput: { display: 'none' },
-  customFileLabelTriggerBtn: { display: 'block', textAlign: 'center', backgroundColor: '#0D0D0F', border: '1px dashed #242428', padding: '20px', borderRadius: '16px', color: '#FFF', fontSize: '11px', fontWeight: '800', cursor: 'pointer', letterSpacing: '1px' },
-  portalForm: { display: 'flex', flexDirection: 'column', gap: '16px' },
-  formTextInput: { backgroundColor: '#0D0D0F', border: '1px solid #141416', borderRadius: '14px', padding: '14px 16px', color: '#FFF', fontSize: '13.5px', outline: 'none' },
-  formTextareaInput: { backgroundColor: '#0D0D0F', border: '1px solid #141416', borderRadius: '14px', padding: '14px 16px', color: '#FFF', fontSize: '13.5px', outline: 'none', fontFamily: 'inherit', resize: 'none' },
-  launchBtn: { backgroundColor: '#FFFFFF', border: 'none', color: '#000', fontSize: '11px', fontWeight: '900', padding: '16px', borderRadius: '14px', cursor: 'pointer', letterSpacing: '1.5px', marginTop: '10px' },
-
-  profileDashboardContainer: { width: '100%', maxWidth: '850px', padding: '0 20px', display: 'flex', flexDirection: 'column' },
-  profileHeaderBox: { display: 'flex', gap: '50px', paddingBottom: '50px', borderBottom: '1px solid #141416', marginBottom: '35px', alignItems: 'center' },
-  profileAvatarBig: { width: '100px', height: '100px', borderRadius: '50%', backgroundColor: '#0D0D0F', border: '1px solid #141416', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px', fontWeight: '800' },
-  profileAvatarBigImg: { width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #141416' },
-  avatarMiniUploadTrigger: { position: 'absolute', bottom: 0, right: 0, backgroundColor: '#FFF', color: '#000', padding: '4px 10px', borderRadius: '20px', fontSize: '9px', fontWeight: '900', cursor: 'pointer' },
-  profileMetaInfoColumn: { display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 },
-  profileUsernameRow: { display: 'flex', alignItems: 'center', gap: '25px' },
-  profileUsernameHeader: { fontSize: '20px', fontWeight: '700', margin: 0, letterSpacing: '-0.5px' },
-  editProfileButton: { backgroundColor: '#0D0D0F', border: '1px solid #141416', color: '#FFF', fontSize: '11px', fontWeight: '700', padding: '8px 16px', borderRadius: '12px', cursor: 'pointer', letterSpacing: '0.5px' },
-  profileStatsRow: { display: 'flex', gap: '40px', fontSize: '14px', color: '#A0A0A0' },
-  bioEditorTextarea: { backgroundColor: '#0D0D0F', border: '1px solid #141416', borderRadius: '12px', padding: '12px', color: '#FFF', fontSize: '13px', outline: 'none', resize: 'none', fontFamily: 'inherit' },
-  saveBioBtn: { backgroundColor: '#FFF', color: '#000', border: 'none', padding: '8px 14px', borderRadius: '10px', fontSize: '10px', fontWeight: '900', cursor: 'pointer', alignSelf: 'flex-start', letterSpacing: '0.5px' },
-
-  threeColumnLookbookGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', paddingBottom: '80px' },
-  gridImageCardWrapper: { position: 'relative', aspectRatio: '1/1', backgroundColor: '#0D0D0F', overflow: 'hidden', borderRadius: '14px', cursor: 'pointer', border: '1px solid #141416' },
-  gridImageItem: { width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.3s ease' }
+  appContainer: { 
+    display: 'flex', 
+    minHeight: '100vh', 
+    backgroundColor: '#070708', 
+    color: '#FFFFFF', 
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
+    letterSpacing: '-0.01em' 
+  },
+  sidebar: { 
+    width: '250px', 
+    height: '100vh', 
+    position: 'fixed', 
+    top: 0, 
+    left: 0, 
+    borderRight: '1px solid #141416', 
+    padding: '40px 30px', 
+    display: 'flex', 
+    flexDirection: 'column', 
+    justifyContent: 'space-between', 
+    boxSizing: 'border-box', 
+    backgroundColor: '#070708', 
+    zIndex: 10 
+  },
+  logo: { 
+    fontSize: '16px', 
+    fontWeight: '900', 
+    letterSpacing: '4px', 
+    marginBottom: '50px', 
+    paddingLeft: '10px', 
+    cursor: 'pointer', 
+    color: '#FFF' 
+  },
+  navLinks: { 
+    display: 'flex', 
+    flexDirection: 'column', 
+    gap: '8px' 
+  },
+  navText: { 
+    fontSize: '13px', 
+    fontWeight: '500', 
+    letterSpacing: '0.5px' 
+  },
+  navItem: { 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: '18px', 
+    padding: '14px 12px', 
+    borderRadius: '12px', 
+    cursor: 'pointer', 
+    transition: 'all 0.2s ease' 
+  },
+  profileLink: { 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: '14px', 
+    padding: '12px', 
+    border: '1px solid #141416', 
+    borderRadius: '16px', 
+    marginTop: 'auto', 
+    cursor: 'pointer', 
+    backgroundColor: '#0D0D0F' 
+  },
+  miniAvatar: { 
+    width: '24px', 
+    height: '24px', 
+    borderRadius: '50%', 
+    backgroundColor: '#1A1A1E', 
+    display: 'flex', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    fontSize: '9px', 
+    fontWeight: 'bold', 
+    color: '#A0A0A0' 
+  },
+  miniAvatarImg: { 
+    width: '24px', 
+    height: '24px', 
+    borderRadius: '50%', 
+    objectFit: 'cover' 
+  },
+  mainContent: { 
+    marginLeft: '250px', 
+    flex: 1, 
+    display: 'flex', 
+    justifyContent: 'center', 
+    paddingTop: '50px', 
+    minWidth: '0', 
+    paddingBottom: '80px' 
+  },
+  mainContentPanels: { 
+    marginLeft: '250px', 
+    flex: 1, 
+    display: 'flex', 
+    justifyContent: 'center', 
+    paddingTop: '60px', 
+    minWidth: '0', 
+    paddingBottom: '80px' 
+  },
+  feedContainer: { 
+    width: '100%', 
+    maxWidth: '580px', 
+    padding: '0 20px' 
+  },
+  loaderSpinnerBox: { 
+    fontSize: '10px', 
+    letterSpacing: '3px', 
+    color: '#808080', 
+    textAlign: 'center', 
+    marginTop: '140px', 
+    fontWeight: '700' 
+  },
+  postCard: { 
+    border: '1px solid #141416', 
+    backgroundColor: '#0D0D0F', 
+    borderRadius: '24px', 
+    marginBottom: '35px', 
+    paddingBottom: '16px', 
+    overflow: 'hidden' 
+  },
+  postHeader: { 
+    display: 'flex', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    padding: '18px 20px' 
+  },
+  headerLeft: { 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: '12px', 
+    cursor: 'pointer' 
+  },
+  brandAvatar: { 
+    width: '38px', 
+    height: '38px', 
+    borderRadius: '50%', 
+    backgroundColor: '#1A1A1E', 
+    display: 'flex', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    fontSize: '11px', 
+    fontWeight: '700', 
+    color: '#FFF', 
+    border: '1px solid #242428' 
+  },
+  usernameRow: { 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: '6px' 
+  },
+  username: { 
+    fontSize: '13px', 
+    fontWeight: '600', 
+    color: '#FFF', 
+    letterSpacing: '-0.1px' 
+  },
+  badgeVerify: { 
+    width: '14px', 
+    height: '14px', 
+    borderRadius: '50%', 
+    backgroundColor: '#FFF', 
+    display: 'flex', 
+    alignItems: 'center', 
+    justifyContent: 'center' 
+  },
+  location: { 
+    fontSize: '11px', 
+    color: '#6A6A70', 
+    display: 'block', 
+    marginTop: '2px' 
+  },
+  mediaContainer: { 
+    display: 'flex', 
+    backgroundColor: '#000', 
+    margin: '0 12px', 
+    borderRadius: '16px', 
+    overflow: 'hidden' 
+  },
+  postImage: { 
+    width: '100%', 
+    height: 'auto', 
+    aspectRatio: '4/5', 
+    objectFit: 'cover', 
+    display: 'block' 
+  },
+  actionRow: { 
+    display: 'flex', 
+    padding: '16px 20px 8px 20px', 
+    gap: '20px' 
+  },
+  iconActionBtn: { 
+    background: 'none', 
+    border: 'none', 
+    padding: 0, 
+    cursor: 'pointer', 
+    opacity: 0.85 
+  },
+  likesSection: { 
+    padding: '0 20px', 
+    fontSize: '12px', 
+    fontWeight: '700', 
+    marginBottom: '8px', 
+    color: '#FFF', 
+    letterSpacing: '0.2px', 
+    textTransform: 'uppercase' 
+  },
+  captionSection: { 
+    padding: '0 20px', 
+    fontSize: '13.5px', 
+    lineHeight: '1.5', 
+    marginBottom: '12px', 
+    color: '#A0A0A0' 
+  },
+  boldUser: { 
+    fontWeight: '700', 
+    marginRight: '8.5px', 
+    cursor: 'pointer', 
+    color: '#FFF' 
+  },
+  captionText: { 
+    color: '#D4D4D8' 
+  },
+  commentsBoxHarness: { 
+    margin: '12px 20px 4px 20px', 
+    borderTop: '1px solid #141416', 
+    paddingTop: '14px' 
+  },
+  commentsListingArea: { 
+    display: 'flex', 
+    flexDirection: 'column', 
+    gap: '8px', 
+    maxHeight: '140px', 
+    overflowY: 'auto', 
+    marginBottom: '14px' 
+  },
+  singleCommentRow: { 
+    fontSize: '12.5px', 
+    lineHeight: '1.4' 
+  },
+  commentInputRow: { 
+    display: 'flex', 
+    gap: '12px', 
+    border: '1px solid #141416', 
+    borderRadius: '14px', 
+    padding: '8px 14px', 
+    backgroundColor: '#070708', 
+    alignItems: 'center' 
+  },
+  inlineCommentInput: { 
+    flex: 1, 
+    background: 'none', 
+    border: 'none', 
+    color: '#FFF', 
+    fontSize: '13px', 
+    outline: 'none' 
+  },
+  postCommentBtn: { 
+    background: 'none', 
+    border: 'none', 
+    color: '#FFF', 
+    fontSize: '11px', 
+    fontWeight: '800', 
+    cursor: 'pointer', 
+    letterSpacing: '1px' 
+  },
+  searchBarInput: { 
+    width: '100%', 
+    backgroundColor: '#0D0D0F', 
+    border: '1px solid #141416', 
+    borderRadius: '16px', 
+    padding: '16px 20px', 
+    color: '#FFF', 
+    fontSize: '14px', 
+    outline: 'none', 
+    marginBottom: '30px' 
+  },
+  searchResultsContainer: { 
+    display: 'flex', 
+    flexDirection: 'column', 
+    gap: '10px' 
+  },
+  searchResultRowItem: { 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: '16px', 
+    backgroundColor: '#0D0D0F', 
+    padding: '14px 20px', 
+    borderRadius: '16px', 
+    border: '1px solid #141416', 
+    cursor: 'pointer' 
+  },
+  searchMiniAvatar: { 
+    width: '38px', 
+    height: '38px', 
+    borderRadius: '50%', 
+    backgroundColor: '#1A1A1E', 
+    display: 'flex', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    fontSize: '11px', 
+    fontWeight: '700', 
+    color: '#707070' 
+  },
+  searchResultUsername: { 
+    fontSize: '13px', 
+    fontWeight: '600', 
+    color: '#FFF' 
+  },
+  searchResultCaptionSnippet: { 
+    fontSize: '12px', 
+    color: '#707070', 
+    marginTop: '3px' 
+  },
+  panelCenterContainer: { 
+    width: '100%', 
+    maxWidth: '480px', 
+    padding: '0 20px', 
+    display: 'flex', 
+    flexDirection: 'column' 
+  },
+  panelTitleHeader: { 
+    fontSize: '14px', 
+    fontWeight: '900', 
+    letterSpacing: '3px', 
+    marginBottom: '35px', 
+    color: '#FFF', 
+    textAlign: 'center' 
+  },
+  nativeHiddenFileInput: { 
+    display: 'none' 
+  },
+  customFileLabelTriggerBtn: { 
+    display: 'block', 
+    textAlign: 'center', 
+    backgroundColor: '#0D0D0F', 
+    border: '1px dashed #242428', 
+    padding: '20px', 
+    borderRadius: '16px', 
+    color: '#FFF', 
+    fontSize: '11px', 
+    fontWeight: '800', 
+    cursor: 'pointer', 
+    letterSpacing: '1px' 
+  },
+  portalForm: { 
+    display: 'flex', 
+    flexDirection: 'column', 
+    gap: '16px' 
+  },
+  formTextInput: { 
+    backgroundColor: '#0D0D0F', 
+    border: '1px solid #141416', 
+    borderRadius: '14px', 
+    padding: '14px 16px', 
+    color: '#FFF', 
+    fontSize: '13.5px', 
+    outline: 'none' 
+  },
+  formTextareaInput: { 
+    backgroundColor: '#0D0D0F', 
+    border: '1px solid #141416', 
+    borderRadius: '14px', 
+    padding: '14px 16px', 
+    color: '#FFF', 
+    fontSize: '13.5px', 
+    outline: 'none', 
+    fontFamily: 'inherit', 
+    resize: 'none' 
+  },
+  launchBtn: { 
+    backgroundColor: '#FFFFFF', 
+    border: 'none', 
+    color: '#000', 
+    fontSize: '11px', 
+    fontWeight: '900', 
+    padding: '16px', 
+    borderRadius: '14px', 
+    cursor: 'pointer', 
+    letterSpacing: '1.5px', 
+    marginTop: '10px' 
+  },
+  profileDashboardContainer: { 
+    width: '100%', 
+    maxWidth: '850px', 
+    padding: '0 20px', 
+    display: 'flex', 
+    flexDirection: 'column' 
+  },
+  profileHeaderBox: { 
+    display: 'flex', 
+    gap: '50px', 
+    paddingBottom: '50px', 
+    borderBottom: '1px solid #141416', 
+    marginBottom: '35px', 
+    alignItems: 'center' 
+  },
+  profileAvatarBig: { 
+    width: '100px', 
+    height: '100px', 
+    borderRadius: '50%', 
+    backgroundColor: '#0D0D0F', 
+    border: '1px solid #141416', 
+    display: 'flex', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    fontSize: '28px', 
+    fontWeight: '800' 
+  },
+  profileAvatarBigImg: { 
+    width: '100px', 
+    height: '100px', 
+    borderRadius: '50%', 
+    objectFit: 'cover', 
+    border: '1px solid #141416' 
+  },
+  avatarMiniUploadTrigger: { 
+    position: 'absolute', 
+    bottom: 0, 
+    right: 0, 
+    backgroundColor: '#FFF', 
+    color: '#000', 
+    padding: '4px 10px', 
+    borderRadius: '20px', 
+    fontSize: '9px', 
+    fontWeight: '900', 
+    cursor: 'pointer' 
+  },
+  profileMetaInfoColumn: { 
+    display: 'flex', 
+    flexDirection: 'column', 
+    gap: '12px', 
+    flex: 1 
+  },
+  profileUsernameRow: { 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: '25px' 
+  },
+  profileUsernameHeader: { 
+    fontSize: '20px', 
+    fontWeight: '700', 
+    margin: 0, 
+    letterSpacing: '-0.5px' 
+  },
+  editProfileButton: { 
+    backgroundColor: '#0D0D0F', 
+    border: '1px solid #141416', 
+    color: '#FFF', 
+    fontSize: '11px', 
+    fontWeight: '700', 
+    padding: '8px 16px', 
+    borderRadius: '12px', 
+    cursor: 'pointer', 
+    letterSpacing: '0.5px' 
+  },
+  profileStatsRow: { 
+    display: 'flex', 
+    gap: '40px', 
+    fontSize: '14px', 
+    color: '#A0A0A0' 
+  },
+  bioEditorTextarea: { 
+    backgroundColor: '#0D0D0F', 
+    border: '1px solid #141416', 
+    borderRadius: '12px', 
+    padding: '12px', 
+    color: '#FFF', 
+    fontSize: '13px', 
+    outline: 'none', 
+    resize: 'none', 
+    fontFamily: 'inherit' 
+  },
+  saveBioBtn: { 
+    backgroundColor: '#FFF', 
+    color: '#000', 
+    border: 'none', 
+    padding: '8px 14px', 
+    borderRadius: '10px', 
+    fontSize: '10px', 
+    fontWeight: '900', 
+    cursor: 'pointer', 
+    alignSelf: 'flex-start', 
+    letterSpacing: '0.5px' 
+  },
+  threeColumnLookbookGrid: { 
+    display: 'grid', 
+    gridTemplateColumns: 'repeat(3, 1fr)', 
+    gap: '16px', 
+    paddingBottom: '80px' 
+  },
+  gridImageCardWrapper: { 
+    position: 'relative', 
+    aspectRatio: '1/1', 
+    backgroundColor: '#0D0D0F', 
+    overflow: 'hidden', 
+    borderRadius: '14px', 
+    cursor: 'pointer', 
+    border: '1px solid #141416' 
+  },
+  gridImageItem: { 
+    width: '100%', 
+    height: '100%', 
+    objectFit: 'cover', 
+    display: 'block', 
+    transition: 'transform 0.3s ease' 
+  }
 };
