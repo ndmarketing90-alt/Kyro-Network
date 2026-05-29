@@ -1,0 +1,24 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #05070a; /* Ultra-dark luxury desaturated slate */
+  color: #ffffff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #05070a;
+}
+
+/* Custom scrollbar to keep it looking seamless and premium */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #05070a;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a1f26;
+  border-radius: 4px;
+}
