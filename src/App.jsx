@@ -144,7 +144,7 @@ export default function App() {
   const fetchGlobalFeed = async () => {
     setLoadingPosts(true);
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('posts')
         .select(`
           *,
@@ -154,7 +154,13 @@ export default function App() {
         `)
         .order('created_at', { ascending: false });
 
-      if (data) setPosts(data);
+      if (error) {
+        // Fallback if the relationship hasn't been built in SQL yet
+        const { data: simpleData } = await supabase.from('posts').select('*').order('created_at', { ascending: false });
+        setPosts(simpleData || []);
+      } else {
+        setPosts(data || []);
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -184,10 +190,10 @@ export default function App() {
 
       if (uploadType === 'avatar') {
         setAvatarInputUrl(publicUrl);
-        alert("Profile picture loaded! Click Save to finish.");
+        alert("Image uploaded! Now click 'Save Profile' below to finish.");
       } else if (uploadType === 'post') {
         setImgUrl(publicUrl);
-        alert("Image uploaded successfully!");
+        alert("Image uploaded successfully! Fill out your caption and click Share.");
       }
     } catch (error) {
       alert(`Upload error: ${error.message}`);
@@ -214,6 +220,7 @@ export default function App() {
     else {
       alert("Account created!");
       setActiveTab('home');
+      fetchGlobalFeed();
     }
   };
 
@@ -221,7 +228,10 @@ export default function App() {
     e.preventDefault();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) alert(error.message);
-    else setActiveTab('home');
+    else {
+      setActiveTab('home');
+      fetchGlobalFeed();
+    }
   };
 
   const handleSignOut = async () => {
@@ -298,7 +308,7 @@ export default function App() {
   const fetchTargetProfileData = async (targetUserId) => {
     try {
       const { data: pData } = await supabase.from('profiles').select('*').eq('id', targetUserId).single();
-      const { data: postsData } = await supabase.from('posts').select(`*, profiles:user_id (brand_name, username, avatar_url), likes (user_id), comments (id, text, created_at, profiles:user_id (brand_name, username))`).eq('user_id', targetUserId).order('created_at', { ascending: false });
+      const { data: postsData } = await supabase.from('posts').select(`*, likes (user_id), comments (id, text, created_at)`).eq('user_id', targetUserId).order('created_at', { ascending: false });
       setSelectedProfileData(pData);
       setSelectedProfilePosts(postsData || []);
     } catch (err) {
@@ -387,11 +397,11 @@ export default function App() {
                     <div style={styles.postHeader}>
                       <div style={styles.headerLeft} onClick={() => handleRouteToProfile(post.user_id)}>
                         <div style={styles.brandAvatar}>
-                          {post.profiles?.avatar_url ? <img src={post.profiles.avatar_url} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} alt="Avatar" /> : post.profiles?.brand_name?.charAt(0).toUpperCase()}
+                          {post.profiles?.avatar_url ? <img src={post.profiles.avatar_url} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} alt="Avatar" /> : post.brand_name?.charAt(0).toUpperCase() || 'K'}
                         </div>
                         <div>
                           <div style={styles.usernameRow}>
-                            <span style={styles.username}>{post.profiles?.brand_name}</span>
+                            <span style={styles.username}>{post.profiles?.brand_name || 'Kyro Member'}</span>
                             <div style={styles.badgeVerify}><CheckCircle2 size={9} color="#000" fill="#FFF" /></div>
                           </div>
                           {post.location && <span style={styles.location}>{post.location}</span>}
@@ -416,7 +426,7 @@ export default function App() {
 
                     {post.caption && (
                       <div style={styles.captionSection}>
-                        <span style={styles.boldUser} onClick={() => handleRouteToProfile(post.user_id)}>@{post.profiles?.username}</span>
+                        <span style={styles.boldUser} onClick={() => handleRouteToProfile(post.user_id)}>@{post.profiles?.username || 'user'}</span>
                         <span style={styles.captionText}>{post.caption}</span>
                       </div>
                     )}
@@ -426,7 +436,7 @@ export default function App() {
                         <div style={styles.commentsListingArea}>
                           {post.comments.map((comm) => (
                             <div key={comm.id} style={styles.singleCommentRow}>
-                              <strong style={{ color: '#FFF', marginRight: '6px' }}>{comm.profiles?.brand_name}:</strong>
+                              <strong style={{ color: '#FFF', marginRight: '6px' }}>{comm.profiles?.brand_name || 'User'}:</strong>
                               <span style={{ color: '#B0B0B5' }}>{comm.text}</span>
                             </div>
                           ))}
@@ -482,15 +492,15 @@ export default function App() {
             <form style={styles.portalForm} onSubmit={handleCreatePost}>
               <label htmlFor="post-file-upload" style={styles.customFileLabelTriggerBtn}>
                 <Upload size={24} color="#FFF" />
-                {imgUrl ? "✓ Image Uploaded" : "Choose Image From Laptop"}
+                {uploadingFile ? "Uploading to database..." : imgUrl ? "✓ Image Uploaded" : "Choose Image From Laptop"}
               </label>
               <input id="post-file-upload" type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'post')} disabled={uploadingFile} style={styles.nativeHiddenFileInput} />
 
               <input type="text" placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)} style={styles.formTextInput} />
               <textarea placeholder="Write a caption..." rows={4} value={caption} onChange={(e) => setCaption(e.target.value)} style={styles.formTextareaInput} />
               
-              <button type="submit" style={styles.launchBtn} disabled={uploadingFile}>
-                {uploadingFile ? "Uploading image..." : "Share Post"}
+              <button type="submit" style={styles.launchBtn} disabled={uploadingFile || !imgUrl}>
+                Share Post
               </button>
             </form>
           </div>
@@ -549,13 +559,13 @@ export default function App() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
                     <label htmlFor="avatar-file-upload" style={{ ...styles.customFileLabelTriggerBtn, padding: '15px' }}>
                       <Upload size={18} color="#FFF" style={{ marginRight: '8px', inlineSize: 'auto' }} />
-                      {avatarInputUrl ? "✓ Picture Uploaded" : "Choose Profile Picture"}
+                      {uploadingFile ? "Uploading..." : avatarInputUrl ? "✓ Picture Uploaded" : "Choose Profile Picture"}
                     </label>
                     <input id="avatar-file-upload" type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'avatar')} disabled={uploadingFile} style={styles.nativeHiddenFileInput} />
 
                     <textarea rows={3} value={bioInput} onChange={(e) => setBioInput(e.target.value)} placeholder="Write your bio..." style={styles.bioEditorTextarea} />
                     <button style={styles.saveBioBtn} onClick={handleUpdateBioAndMeta} disabled={uploadingFile}>
-                      {uploadingFile ? "Saving..." : "Save Profile"}
+                      Save Profile
                     </button>
                   </div>
                 ) : (
