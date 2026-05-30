@@ -10,7 +10,8 @@ import {
   CheckCircle2, 
   LogOut, 
   Edit3,
-  Upload
+  Upload,
+  Image as ImageIcon
 } from 'lucide-react';
 
 const styles = {
@@ -57,12 +58,10 @@ const styles = {
   searchResultCaptionSnippet: { fontSize: '12px', color: '#707070', marginTop: '3px' },
   panelCenterContainer: { width: '100%', maxWidth: '480px', padding: '0 20px', display: 'flex', flexDirection: 'column' },
   panelTitleHeader: { fontSize: '18px', fontWeight: '700', marginBottom: '30px', textAlign: 'center' },
-  nativeHiddenFileInput: { display: 'none' },
-  customFileLabelTriggerBtn: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', textAlign: 'center', backgroundColor: '#0D0D0F', border: '1px dashed #242428', padding: '30px 20px', borderRadius: '16px', color: '#A0A0A0', fontSize: '13px', cursor: 'pointer' },
   portalForm: { display: 'flex', flexDirection: 'column', gap: '16px' },
   formTextInput: { backgroundColor: '#0D0D0F', border: '1px solid #141416', borderRadius: '14px', padding: '14px 16px', color: '#FFF', fontSize: '14px', outline: 'none' },
   formTextareaInput: { backgroundColor: '#0D0D0F', border: '1px solid #141416', borderRadius: '14px', padding: '14px 16px', color: '#FFF', fontSize: '14px', outline: 'none', fontFamily: 'inherit', resize: 'none' },
-  launchBtn: { backgroundColor: '#FFFFFF', border: 'none', color: '#000', fontSize: '13px', fontWeight: '700', padding: '16px', borderRadius: '14px', cursor: 'pointer', marginTop: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' },
+  launchBtn: { backgroundColor: '#FFFFFF', border: 'none', color: '#000', fontSize: '13px', fontWeight: '700', padding: '16px', borderRadius: '14px', cursor: 'pointer', marginTop: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' },
   profileDashboardContainer: { width: '100%', maxWidth: '850px', padding: '0 20px', display: 'flex', flexDirection: 'column' },
   profileHeaderBox: { display: 'flex', gap: '50px', paddingBottom: '40px', borderBottom: '1px solid #141416', marginBottom: '35px', alignItems: 'center' },
   profileAvatarBig: { width: '100px', height: '100px', borderRadius: '50%', backgroundColor: '#0D0D0F', border: '1px solid #141416', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px', fontWeight: '800' },
@@ -76,7 +75,8 @@ const styles = {
   saveBioBtn: { backgroundColor: '#FFF', color: '#000', border: 'none', padding: '10px 16px', borderRadius: '10px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', alignSelf: 'flex-start', marginTop: '5px' },
   threeColumnLookbookGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', paddingBottom: '80px' },
   gridImageCardWrapper: { position: 'relative', aspectRatio: '1/1', backgroundColor: '#0D0D0F', overflow: 'hidden', borderRadius: '14px', cursor: 'pointer', border: '1px solid #141416' },
-  gridImageItem: { width: '100%', height: '100%', objectFit: 'cover' }
+  gridImageItem: { width: '100%', height: '100%', objectFit: 'cover' },
+  uploadCard: { border: '2px dashed #141416', borderRadius: '14px', padding: '30px', textAlign: 'center', cursor: 'pointer', backgroundColor: '#0D0D0F', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }
 };
 
 export default function App() {
@@ -95,14 +95,16 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
-  const [imgUrl, setImgUrl] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
   const [caption, setCaption] = useState('');
   const [location, setLocation] = useState('');
-  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [bioInput, setBioInput] = useState('');
-  const [avatarInputUrl, setAvatarInputUrl] = useState('');
+  const [selectedAvatarFile, setSelectedAvatarFile] = useState(null);
+  const [avatarPreviewUrl, setAvatarPreviewUrl] = useState('');
 
   const [selectedProfileId, setSelectedProfileId] = useState(null);
   const [selectedProfileData, setSelectedProfileData] = useState(null);
@@ -134,7 +136,6 @@ export default function App() {
       if (data) {
         setProfile(data);
         setBioInput(data.bio || '');
-        setAvatarInputUrl(data.avatar_url || '');
       }
     } catch (err) {
       console.error(err);
@@ -155,7 +156,6 @@ export default function App() {
         .order('created_at', { ascending: false });
 
       if (error) {
-        // Fallback if the relationship hasn't been built in SQL yet
         const { data: simpleData } = await supabase.from('posts').select('*').order('created_at', { ascending: false });
         setPosts(simpleData || []);
       } else {
@@ -165,40 +165,6 @@ export default function App() {
       console.error(err);
     } finally {
       setLoadingPosts(false);
-    }
-  };
-
-  const handleFileUpload = async (event, uploadType) => {
-    try {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      setUploadingFile(true);
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `${user.id}/${uploadType}/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('kyro-media')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('kyro-media')
-        .getPublicUrl(filePath);
-
-      if (uploadType === 'avatar') {
-        setAvatarInputUrl(publicUrl);
-        alert("Image uploaded! Now click 'Save Profile' below to finish.");
-      } else if (uploadType === 'post') {
-        setImgUrl(publicUrl);
-        alert("Image uploaded successfully! Fill out your caption and click Share.");
-      }
-    } catch (error) {
-      alert(`Upload error: ${error.message}`);
-    } finally {
-      setUploadingFile(false);
     }
   };
 
@@ -218,7 +184,7 @@ export default function App() {
 
     if (error) alert(error.message);
     else {
-      alert("Account created!");
+      alert("Account created successfully!");
       setActiveTab('home');
       fetchGlobalFeed();
     }
@@ -288,20 +254,54 @@ export default function App() {
     }
   };
 
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
   const handleCreatePost = async (e) => {
     e.preventDefault();
     if (!user) { setActiveTab('portal'); return; }
-    if (!imgUrl.trim()) { alert("Please upload an image first."); return; }
+    if (!selectedFile) { alert("Please select an image file first."); return; }
 
+    setUploading(true);
     try {
-      const { error } = await supabase.from('posts').insert({ user_id: user.id, img_url: imgUrl.trim(), caption: caption.trim(), location: location.trim() });
-      if (!error) {
-        setImgUrl(''); setCaption(''); setLocation('');
-        fetchGlobalFeed();
-        setActiveTab('home');
-      }
+      const fileExt = selectedFile.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('kyro-media')
+        .upload(fileName, selectedFile);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('kyro-media')
+        .getPublicUrl(fileName);
+
+      const { error: dbError } = await supabase.from('posts').insert({ 
+        user_id: user.id, 
+        img_url: publicUrl, 
+        caption: caption.trim(), 
+        location: location.trim() 
+      });
+
+      if (dbError) throw dbError;
+
+      setSelectedFile(null);
+      setPreviewUrl('');
+      setCaption('');
+      setLocation('');
+      fetchGlobalFeed();
+      setActiveTab('home');
     } catch (err) {
+      alert("Upload failed: " + err.message);
       console.error(err);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -322,17 +322,53 @@ export default function App() {
     setActiveTab('profileView');
   };
 
+  const handleAvatarFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedAvatarFile(file);
+      setAvatarPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
   const handleUpdateBioAndMeta = async () => {
     if (!user) return;
+    setUploading(true);
     try {
-      const { error } = await supabase.from('profiles').update({ bio: bioInput.trim(), avatar_url: avatarInputUrl.trim() }).eq('id', user.id);
-      if (!error) {
-        setIsEditingBio(false);
-        fetchUserProfile(user.id);
-        fetchGlobalFeed();
+      let finalAvatarUrl = profile?.avatar_url || '';
+
+      if (selectedAvatarFile) {
+        const fileExt = selectedAvatarFile.name.split('.').pop();
+        const fileName = `${user.id}/avatar-${Date.now()}.${fileExt}`;
+
+        const { error: avatarUploadErr } = await supabase.storage
+          .from('kyro-media')
+          .upload(fileName, selectedAvatarFile);
+
+        if (avatarUploadErr) throw avatarUploadErr;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('kyro-media')
+          .getPublicUrl(fileName);
+
+        finalAvatarUrl = publicUrl;
       }
+
+      const { error } = await supabase.from('profiles').update({ 
+        bio: bioInput.trim(), 
+        avatar_url: finalAvatarUrl 
+      }).eq('id', user.id);
+
+      if (error) throw error;
+
+      setIsEditingBio(false);
+      setSelectedAvatarFile(null);
+      setAvatarPreviewUrl('');
+      fetchUserProfile(user.id);
+      fetchGlobalFeed();
     } catch (err) {
-      console.error(err);
+      alert("Failed updating profile: " + err.message);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -490,17 +526,25 @@ export default function App() {
           <div style={styles.panelCenterContainer}>
             <div style={styles.panelTitleHeader}>Create New Post</div>
             <form style={styles.portalForm} onSubmit={handleCreatePost}>
-              <label htmlFor="post-file-upload" style={styles.customFileLabelTriggerBtn}>
-                <Upload size={24} color="#FFF" />
-                {uploadingFile ? "Uploading to database..." : imgUrl ? "✓ Image Uploaded" : "Choose Image From Laptop"}
+              
+              {/* Instagram Style Image Selector Button */}
+              <label htmlFor="file-upload" style={styles.uploadCard}>
+                {previewUrl ? (
+                  <img src={previewUrl} style={{ width: '100%', maxHeight: '250px', objectFit: 'cover', borderRadius: '8px' }} alt="Preview" />
+                ) : (
+                  <>
+                    <Upload size={32} color="#8A8A8E" />
+                    <span style={{ fontSize: '14px', color: '#8A8A8E' }}>Select photo from device</span>
+                  </>
+                )}
               </label>
-              <input id="post-file-upload" type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'post')} disabled={uploadingFile} style={styles.nativeHiddenFileInput} />
+              <input id="file-upload" type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
 
               <input type="text" placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)} style={styles.formTextInput} />
               <textarea placeholder="Write a caption..." rows={4} value={caption} onChange={(e) => setCaption(e.target.value)} style={styles.formTextareaInput} />
               
-              <button type="submit" style={styles.launchBtn} disabled={uploadingFile || !imgUrl}>
-                Share Post
+              <button type="submit" style={styles.launchBtn} disabled={!selectedFile || uploading}>
+                {uploading ? 'Uploading Asset...' : 'Share Post'}
               </button>
             </form>
           </div>
@@ -546,7 +590,7 @@ export default function App() {
                   <h2 style={styles.profileUsernameHeader}>{selectedProfileData.brand_name}</h2>
                   {user?.id === selectedProfileData.id && !isEditingBio && (
                     <button style={styles.editProfileButton} onClick={() => setIsEditingBio(true)}>
-                      <Edit3 size={12} style={{ marginRight: '6px', inlineSize: 'auto' }} /> Edit Profile
+                      <Edit3 size={12} style={{ marginRight: '6px' }} /> Edit Profile
                     </button>
                   )}
                 </div>
@@ -557,15 +601,19 @@ export default function App() {
 
                 {isEditingBio ? (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
-                    <label htmlFor="avatar-file-upload" style={{ ...styles.customFileLabelTriggerBtn, padding: '15px' }}>
-                      <Upload size={18} color="#FFF" style={{ marginRight: '8px', inlineSize: 'auto' }} />
-                      {uploadingFile ? "Uploading..." : avatarInputUrl ? "✓ Picture Uploaded" : "Choose Profile Picture"}
+                    
+                    {/* Instagram Style Avatar Selector */}
+                    <label htmlFor="avatar-upload" style={{ ...styles.formTextInput, display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                      <ImageIcon size={16} color="#8A8A8E" />
+                      <span style={{ color: '#8A8A8E', fontSize: '13px' }}>
+                        {selectedAvatarFile ? selectedAvatarFile.name : "Change Profile Photo"}
+                      </span>
                     </label>
-                    <input id="avatar-file-upload" type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'avatar')} disabled={uploadingFile} style={styles.nativeHiddenFileInput} />
+                    <input id="avatar-upload" type="file" accept="image/*" onChange={handleAvatarFileChange} style={{ display: 'none' }} />
 
                     <textarea rows={3} value={bioInput} onChange={(e) => setBioInput(e.target.value)} placeholder="Write your bio..." style={styles.bioEditorTextarea} />
-                    <button style={styles.saveBioBtn} onClick={handleUpdateBioAndMeta} disabled={uploadingFile}>
-                      Save Profile
+                    <button style={styles.saveBioBtn} onClick={handleUpdateBioAndMeta} disabled={uploading}>
+                      {uploading ? 'Saving Asset...' : 'Save Profile'}
                     </button>
                   </div>
                 ) : (
